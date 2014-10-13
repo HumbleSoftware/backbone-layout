@@ -3,6 +3,8 @@ Backbone.Layout
 
 A simple layout manager for Backbone.  Backbone.Layout provides easy view life cycle managment for composite views.
 
+[![Build Status](https://travis-ci.org/HumbleSoftware/backbone-layout.svg?branch=master)](https://github.com/HumbleSoftware/backbone-layout)
+
 # API
 
 `.setView(view[, selector][, options])`
