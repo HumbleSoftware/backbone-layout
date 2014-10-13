@@ -122,6 +122,9 @@
     }
   };
 
-  Backbone.Layout = Backbone.View.extend(layout);
+  // Attach Layout to Backbone
+  var Layout = Backbone.Layout = Backbone.View.extend(layout);
 
+  // Return for CJS modules
+  return Layout;
 });
