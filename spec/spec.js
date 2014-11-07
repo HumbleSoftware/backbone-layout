@@ -121,7 +121,7 @@ describe('backbone.layout', function () {
       expect(layout.views).to.have.length(1);
     });
     it('replaces view after change to same selector', function () {
-      layout.setView(viewA).setView(viewA).setView(viewB);;
+      layout.setView(viewA).setView(viewA).setView(viewB);
       expect(contains(layout.$el, viewA.el)).to.be.false;
       expect(contains(layout.$el, viewB.el)).to.be.true;
       expect(layout.views).to.have.length(1);
