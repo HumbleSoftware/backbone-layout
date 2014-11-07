@@ -105,6 +105,20 @@ describe('backbone.layout', function () {
       expect(viewA.remove).to.be.called;
       expect(layout.views).to.have.length(1);
     });
+    it('changes view selector', function () {
+      layout.$el.html(templateAB);
+      sinon.spy(view, 'remove');
+      layout.setView(view, '.viewA').setView(view, '.viewB');
+      expect(view.remove).not.to.be.called;
+      expect(contains(layout.$('.viewA'), view.el)).to.be.false;
+      expect(contains(layout.$('.viewB'), view.el)).to.be.true;
+    });
+    it('changes view to same selector', function () {
+      sinon.spy(view, 'remove');
+      layout.setView(view).setView(view);
+      expect(view.remove).not.to.be.called;
+      expect(contains(layout.$el, view.el)).to.be.true;
+    });
     it('appends view to element', function () {
       layout.$el.html(template);
       layout
@@ -191,6 +205,18 @@ describe('backbone.layout', function () {
       layout.render();
       expect(Backbone.View.prototype.render).to.be.called;
       Backbone.View.prototype.render.restore();
+    });
+    it('renders multiply nested views', function () {
+      var layoutA = new Backbone.Layout({className : 'a'});
+      var layoutB = new Backbone.Layout({className : 'b'});
+      var layoutC = new Backbone.Layout({className : 'c'});
+      layoutA.setView(layoutB.setView(layoutC));
+      layoutA.render();
+      expect(contains(layoutA.$el, layoutB.el)).to.be.true;
+      expect(contains(layoutB.$el, layoutC.el)).to.be.true;
+      layoutA.render();
+      expect(contains(layoutA.$el, layoutB.el)).to.be.true;
+      expect(contains(layoutB.$el, layoutC.el)).to.be.true;
     });
     it('chains', function () {
       expect(layout.render()).to.equal(layout);

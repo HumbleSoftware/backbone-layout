@@ -62,13 +62,13 @@
       // Clean up old view if not appending:
       if (views.length && !append) {
         _.each(views, function (item, i) {
-          var view = item.view;
+          var oldView = item.view;
           var options = item.options;
-          if ($children.is(view.el)) {
+          if ($children.is(oldView.el) && oldView !== view) {
             if (options && options.cache) {
-              view.$el.detach();
+              oldView.$el.detach();
             } else {
-              view.remove();
+              oldView.remove();
             }
             views.splice(i, 1);
           }
