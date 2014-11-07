@@ -118,6 +118,13 @@ describe('backbone.layout', function () {
       layout.setView(view).setView(view);
       expect(view.remove).not.to.be.called;
       expect(contains(layout.$el, view.el)).to.be.true;
+      expect(layout.views).to.have.length(1);
+    });
+    it('replaces view after change to same selector', function () {
+      layout.setView(viewA).setView(viewA).setView(viewB);;
+      expect(contains(layout.$el, viewA.el)).to.be.false;
+      expect(contains(layout.$el, viewB.el)).to.be.true;
+      expect(layout.views).to.have.length(1);
     });
     it('appends view to element', function () {
       layout.$el.html(template);

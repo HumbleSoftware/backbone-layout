@@ -64,11 +64,13 @@
         _.each(views, function (item, i) {
           var oldView = item.view;
           var options = item.options;
-          if ($children.is(oldView.el) && oldView !== view) {
-            if (options && options.cache) {
-              oldView.$el.detach();
-            } else {
-              oldView.remove();
+          if ($children.is(oldView.el)) {
+            if (oldView !== view) {
+              if (options && options.cache) {
+                oldView.$el.detach();
+              } else {
+                oldView.remove();
+              }
             }
             views.splice(i, 1);
           }
