@@ -133,6 +133,7 @@ describe('backbone.layout', function () {
         .setView(viewB, null, { append : true });
       expect(contains(layout.el, viewA.el)).to.be.true;
       expect(contains(layout.el, viewB.el)).to.be.true;
+      expect(layout.views).to.have.length(2);
     });
     it('appends view to selector', function () {
       layout.$el.html(template);
@@ -141,6 +142,37 @@ describe('backbone.layout', function () {
         .setView(viewB, '.view', { append : true });
       expect(contains(layout.$('.view'), viewA.el)).to.be.true;
       expect(contains(layout.$('.view'), viewB.el)).to.be.true;
+      expect(layout.views).to.have.length(2);
+    });
+    it('re-appends view to element', function () {
+      layout
+        .setView(viewA, null, { append : true })
+        .setView(viewA, null, { append : true });
+      expect(contains(layout.el, viewA.el)).to.be.true;
+      expect(layout.views).to.have.length(1);
+    });
+    it('re-appends views updating order', function () {
+      layout
+        .setView(viewA, null, { append : true })
+        .setView(viewB, null, { append : true })
+        .setView(viewA, null, { append : true });
+      expect(contains(layout.el, viewA.el)).to.be.true;
+      expect(contains(layout.el, viewB.el)).to.be.true;
+      expect(layout.views).to.have.length(2);
+
+      // Last in line:
+      expect(viewB.$el.next().get(0)).to.equal(viewA.el);
+      expect(layout.views[1].view).to.equal(viewA);
+    });
+    it('replaces multiple views which have been appended', function () {
+      layout
+        .setView(viewA, null, { append : true })
+        .setView(viewB, null, { append : true })
+        .setView(viewC);
+      expect(contains(layout.el, viewA.el)).to.be.false;
+      expect(contains(layout.el, viewB.el)).to.be.false;
+      expect(contains(layout.el, viewC.el)).to.be.true;
+      expect(layout.views).to.have.length(1);
     });
     it('caches view', function () {
       var view = new ViewCache();

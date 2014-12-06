@@ -9,7 +9,6 @@
     define(['underscore', 'backbone'], function (_, Backbone) {
       return factory.apply(root, _, Backbone);
     });
-
   }
 
   // Node support:
@@ -59,20 +58,28 @@
       var $container = selector ? this.$(selector) : this.$el;
       var $children = $container.children();
 
-      // Clean up old view if not appending:
-      if (views.length && !append) {
-        _.each(views, function (item, i) {
+      // Clean up other views if replacing views or moving view
+      if (views.length) {
+        // Iterate over clone to because we are removing views
+        var removed = 0;
+        _.each(_.clone(views), function (item, i) {
           var oldView = item.view;
           var options = item.options;
           if ($children.is(oldView.el)) {
-            if (oldView !== view) {
+
+            // DOM clean up:
+            if (!append && oldView !== view) {
               if (options && options.cache) {
                 oldView.$el.detach();
               } else {
                 oldView.remove();
               }
             }
-            views.splice(i, 1);
+
+            // View list maintenance:
+            if (!append || oldView === view) {
+              views.splice(i - removed++, 1);
+            }
           }
         });
       }
