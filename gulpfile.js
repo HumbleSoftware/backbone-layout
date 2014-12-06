@@ -1,56 +1,43 @@
-var connect = require('gulp-connect');
 var gulp = require('gulp');
-var jshint = require('gulp-jshint');
+var gib = require('gib');
+var connect = require('gib/node_modules/gulp-connect');
 var mochaPhantomJS = require('gulp-mocha-phantomjs');
-var rename = require('gulp-rename');
-var uglify = require('gulp-uglify');
 
-var build = 'backbone-layout.min.js';
-var src = [
-  'backbone-layout.js',
-];
-var js = [
-  '!./node_modules/**',
-  '**/*.js'
-];
-var files = src.concat([
-  'spec/**/*'
-]);
-
-gulp.task('connect', function () {
-  connect.server({
-    port: 8500,
-    livereload: true
-  });
-});
+// Gibberish:
+var config = {
+  build: '.',
+  js: {
+    'backbone-layout.min.js': {
+      src: './backbone-layout.js',
+      jshint: true
+    },
+    'spec': {
+      src: 'spec/**/*.js',
+      jshint: true
+    }
+  },
+  server: {
+    livereload: {
+      port: 35710
+    },
+    port: 8500
+  }
+};
+gib.gulpfile(config, gulp);
 
 gulp.task('test', ['jshint'], function () {
   return gulp
     .src('spec/index.html')
     .pipe(mochaPhantomJS());
 });
-
-gulp.task('jshint', function () {
-  return gulp.src(js)
-    .pipe(jshint())
-    .pipe(jshint.reporter('jshint-stylish'))
-    .pipe(jshint.reporter('fail'));
-});
-
 gulp.task('reload', function () {
-  gulp.src(files)
-    .pipe(connect.reload());
+  gulp.src('spec/**/*').pipe(connect.reload());
 });
-
 gulp.task('watch', function () {
-  gulp.watch(files, ['reload', 'test']);
+  gulp.watch('spec/**/*', ['test']);
+  gulp.watch('backbone-layout.js', ['test']);
 });
-
-gulp.task('build', ['test'], function () {
-  gulp.src(src)
-    .pipe(uglify())
-    .pipe(rename(build))
-    .pipe(gulp.dest('./'));
-});
-
-gulp.task('default', ['test', 'connect', 'watch']);
+gulp.task('jshint', ['js-backbone-layout.min.js-hint', 'js-spec-hint']);
+gulp.task('build', ['test', 'js-backbone-layout.min.js-compile']);
+gulp.task('compile', ['build']);
+gulp.task('default', ['test', 'server', 'watch']);
