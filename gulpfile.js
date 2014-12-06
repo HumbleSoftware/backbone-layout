@@ -20,7 +20,9 @@ var files = src.concat([
 gulp.task('connect', function () {
   connect.server({
     port: 8500,
-    livereload: true
+    livereload: {
+      port: 35710
+    }
   });
 });
 
