@@ -45,7 +45,7 @@ gulp.task('reload', function () {
 });
 
 gulp.task('watch', function () {
-  gulp.watch(files, ['reload', 'test']);
+  gulp.watch(files, ['reload']);
 });
 
 gulp.task('build', ['test'], function () {
