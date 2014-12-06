@@ -9,7 +9,6 @@
     define(['underscore', 'backbone'], function (_, Backbone) {
       return factory.apply(root, _, Backbone);
     });
-
   }
 
   // Node support:
@@ -40,6 +39,7 @@
      * Options:
      * - append  Append the view to the selector
      * - cache  Do not destroy the view.  For switching between views.
+     * - plugin  Adds the view to the selector using setElement
      */
     setView: function (view, selector, options) {
       //view = new ComposedView(this, view, selector, options);
@@ -54,25 +54,36 @@
       options = options || {};
       var append = options.append;
       var cache = options.cache;
+      var plugin = options.plugin;
 
       // View container:
       var $container = selector ? this.$(selector) : this.$el;
       var $children = $container.children();
 
-      // Clean up old view if not appending:
-      if (views.length && !append) {
-        _.each(views, function (item, i) {
+      // Clean up other views if replacing views or moving view
+      if (views.length) {
+        // Iterate over clone to because we are removing views
+        var removed = 0;
+        _.each(_.clone(views), function (item, i) {
           var oldView = item.view;
           var options = item.options;
+          if (plugin && oldView === view) {
+            // View list maintenance for plugins:
+            views.splice(i - removed++, 1);
+          } else
           if ($children.is(oldView.el)) {
-            if (oldView !== view) {
+            // DOM clean up:
+            if (!append && oldView !== view) {
               if (options && options.cache) {
                 oldView.$el.detach();
               } else {
                 oldView.remove();
               }
             }
-            views.splice(i, 1);
+            // View list maintenance:
+            if (!append || oldView === view) {
+              views.splice(i - removed++, 1);
+            }
           }
         });
       }
@@ -83,7 +94,11 @@
         selector: selector,
         options: options
       });
-      $container.append(view.el);
+      if (plugin) {
+        view.setElement($container);
+      } else {
+        $container.append(view.el);
+      }
 
       return this;
     },
