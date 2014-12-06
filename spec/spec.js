@@ -142,6 +142,7 @@ describe('backbone.layout', function () {
         .setView(viewB, '.view', { append : true });
       expect(contains(layout.$('.view'), viewA.el)).to.be.true;
       expect(contains(layout.$('.view'), viewB.el)).to.be.true;
+      expect(layout.$('.view')).to.have.length(1);
       expect(layout.views).to.have.length(2);
     });
     it('re-appends view to element', function () {
@@ -172,6 +173,39 @@ describe('backbone.layout', function () {
       expect(contains(layout.el, viewA.el)).to.be.false;
       expect(contains(layout.el, viewB.el)).to.be.false;
       expect(contains(layout.el, viewC.el)).to.be.true;
+      expect(layout.views).to.have.length(1);
+    });
+    it('plugs a view in to element', function () {
+      layout
+        .setView(viewA, null, { plugin : true })
+        .setView(viewB, null, { plugin : true });
+      expect(viewA.el).to.equal(layout.el);
+      expect(viewB.el).to.equal(layout.el);
+      expect(layout.views).to.have.length(2);
+    });
+    it('plugs a view in to selector', function () {
+      layout.$el.html(template);
+      layout
+        .setView(viewA, '.view', { plugin : true })
+        .setView(viewB, '.view', { plugin : true });
+      var el = layout.$('.view').get(0);
+      expect(viewA.el).to.equal(el);
+      expect(viewB.el).to.equal(el);
+      expect(layout.views).to.have.length(2);
+    });
+    it('plugs a view in to another composite view', function () {
+      layout
+        .setView(viewA, null, { plugin : true })
+        .setView(viewB);
+      expect(viewA.el).to.equal(layout.el);
+      expect(contains(layout.el, viewB.el)).to.be.true;
+      expect(layout.views).to.have.length(2);
+    });
+    it('re-plugs a view in', function () {
+      layout
+        .setView(viewA, null, { plugin : true })
+        .setView(viewA, null, { plugin : true });
+      expect(viewA.el).to.equal(layout.el);
       expect(layout.views).to.have.length(1);
     });
     it('caches view', function () {
