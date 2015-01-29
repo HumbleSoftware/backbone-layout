@@ -39,6 +39,7 @@
      * Options:
      * - append  Append the view to the selector
      * - cache  Do not destroy the view.  For switching between views.
+     * - toggle  Hide view $el.  For switching between views.
      * - plugin  Adds the view to the selector using setElement
      */
     setView: function (view, selector, options) {
@@ -54,6 +55,7 @@
       options = options || {};
       var append = options.append;
       var cache = options.cache;
+      var toggle = options.toggle;
       var plugin = options.plugin;
 
       // View container:
@@ -76,6 +78,9 @@
             if (!append && oldView !== view) {
               if (options && options.cache) {
                 oldView.$el.detach();
+              } else
+              if (options && options.toggle) {
+                oldView.$el.hide();
               } else {
                 oldView.remove();
               }
@@ -97,7 +102,12 @@
       if (plugin) {
         view.setElement($container);
       } else {
-        $container.append(view.el);
+        if (options && options.toggle) {
+          view.$el.show();
+        }
+        if (!options.toggle || view.$el.parent()[0] !== $container[0]) {
+          $container.append(view.el);
+        }
       }
 
       return this;
@@ -113,7 +123,7 @@
       _.each(views.splice(0, views.length), function (item) {
         var view = item.view;
         var options = item.options;
-        if (!options || !options.cache) {
+        if (!options || (!options.cache && !options.toggle)) {
           view.render();
         }
         this.setView(view, item.selector, item.options);

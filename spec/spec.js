@@ -218,6 +218,17 @@ describe('backbone.layout', function () {
       expect(view.remove).not.to.be.called;
       expect(view.handler).to.be.called;
     });
+    it('toggles view', function () {
+      var view = new ViewCache();
+      layout
+        .setView(view, null, { toggle : true })
+        .setView(viewA);
+      view.trigger('my-event');
+      expect(contains(layout.el, view.el)).to.be.true;
+      expect(view.$el.is(':visible')).to.be.false;
+      expect(view.remove).not.to.be.called;
+      expect(view.handler).to.be.called;
+    });
     it('respects options as second argument', function () {
       layout.$el.html(template);
       layout
@@ -255,6 +266,11 @@ describe('backbone.layout', function () {
     it('does not render cached views', function () {
       sinon.spy(view, 'render');
       layout.setView(view, null, { cache : true }).render();
+      expect(view.render).not.to.be.called;
+    });
+    it('does not render toggle views', function () {
+      sinon.spy(view, 'render');
+      layout.setView(view, null, { toggle : true }).render();
       expect(view.render).not.to.be.called;
     });
     it('inserts view in element', function () {

@@ -13,6 +13,7 @@ A simple layout manager for Backbone.  Backbone.Layout provides easy view life c
 * `options` configuration options (optional)
   * `append` by default, `setView` replaces views
   * `cache` cache long-running views when replacing (do not call `remove` or `render`)
+  * `toggle` similar to cache, do not call `remove` or `render`.  Instead toggles `view.$el`, preserving UI state such as the scroll bar.
 
 This attaches a view to a selector.  If no selector is provided, the view is attached to the layouts `el`.  Multiple views may be attached to a single element with the `append` option.  Long-running views may be preserved across renders and replacements with the `cache` option.
 
