@@ -1,6 +1,6 @@
 {
   "name": "backbone-layout",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "A simple layout manager for Backbone.",
   "author": "Carl Sutherland <carl@humblesoftware.com>",
   "license": "MIT",
