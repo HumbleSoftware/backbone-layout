@@ -15,6 +15,7 @@ describe('backbone.layout', function () {
   var ViewEvents = View.extend({
     initialize: function () {
       this.handler = sinon.spy();
+      this.delegateEvents();
     },
     events: {
       click: 'handler'
