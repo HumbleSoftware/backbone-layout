@@ -12,7 +12,7 @@
     "view"
   ],
   "scripts": {
-    "test": "gulp test"
+    "test": "./node_modules/.bin/gulp test"
   },
   "repository": {
     "type": "git",
